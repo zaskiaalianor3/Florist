@@ -1,0 +1,102 @@
+<div id="tab-content-dashboard" class="space-y-6">
+    <!-- Header Atas -->
+    <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-6 rounded-2xl shadow-sm border border-gray-100 gap-4">
+        <div>
+            <h2 class="text-xl font-bold text-gray-900">Dashboard Utama</h2>
+            <p class="text-xs text-gray-400 mt-0.5">Ringkasan aktivitas toko dan kontrol stok harian</p>
+        </div>
+        <div class="flex items-center space-x-3">
+            <div class="bg-gray-100 text-gray-600 px-4 py-2 rounded-xl text-xs font-semibold" id="live-clock">
+                10.46.03 WIB
+            </div>
+            <div class="relative bg-amber-50 border border-amber-200 p-2.5 rounded-xl text-amber-600 cursor-pointer">
+                🔔
+                <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- 4 Kartu Statistik -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+            <p class="text-xs font-medium text-gray-400">Omzet Hari Ini</p>
+            <h3 class="text-2xl font-bold text-gray-900 mt-2">Rp 2.450.000</h3>
+            <p class="text-xs text-emerald-600 font-medium mt-2 flex items-center gap-1">
+                <span>↑</span> +14.2% vs kemarin
+            </p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+            <p class="text-xs font-medium text-gray-400">Total Transaksi</p>
+            <h3 class="text-2xl font-bold text-gray-900 mt-2">18 Pesanan</h3>
+            <p class="text-xs text-gray-500 mt-2">15 Lunas • 3 Diproses</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+            <p class="text-xs font-medium text-gray-400">Total Stok Bunga</p>
+            <h3 class="text-2xl font-bold text-gray-900 mt-2">482 Tangkai</h3>
+            <p class="text-xs text-gray-500 mt-2">8 Varian Segar (FIFO)</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 bg-gradient-to-br from-red-50/50 to-white">
+            <p class="text-xs font-medium text-red-600">Peringatan Bunga Kritis</p>
+            <h3 class="text-2xl font-bold text-red-600 mt-2">1 Item</h3>
+            <p class="text-xs text-red-500 mt-2 font-medium flex items-center gap-1">
+                ⚠️ Lily Casablanca (<10)
+            </p>
+        </div>
+    </div>
+
+    <!-- Tabel Ringkasan Stok FIFO -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="p-6 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+                <h3 class="font-bold text-gray-900 flex items-center gap-2">
+                    <span>🌿</span> Ringkasan Stok Bunga Segar (Kontrol FIFO/FEFO)
+                </h3>
+                <p class="text-xs text-gray-400 mt-0.5">Bunga yang masuk lebih awal diprioritaskan untuk dirangkai terlebih dahulu</p>
+            </div>
+            <button onclick="switchTab('kasir')" class="bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-md transition">
+                + Buka Kasir POS
+            </button>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                    <tr class="bg-gray-50 text-gray-400 uppercase tracking-wider border-b border-gray-100">
+                        <th class="p-4 font-semibold">Nama Bunga / Produk</th>
+                        <th class="p-4 font-semibold">Kategori</th>
+                        <th class="p-4 font-semibold">Tgl Masuk (Batch)</th>
+                        <th class="p-4 font-semibold">Stok Fisik</th>
+                        <th class="p-4 font-semibold">Estimasi Masa Segar</th>
+                        <th class="p-4 font-semibold">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 text-gray-700">
+                    <tr class="hover:bg-gray-50/50 transition">
+                        <td class="p-4 font-medium text-gray-900">🌹 Buket Mawar Holland</td>
+                        <td class="p-4 text-gray-500">Buket Bunga</td>
+                        <td class="p-4 text-gray-500">10 Nov 2026</td>
+                        <td class="p-4 font-bold text-gray-900">15 tangkai</td>
+                        <td class="p-4 text-gray-500">3 hari lagi</td>
+                        <td class="p-4"><span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-medium text-[11px]">Aman</span></td>
+                    </tr>
+                    <tr class="hover:bg-gray-50/50 transition">
+                        <td class="p-4 font-medium text-gray-900">🤍 Bunga Meja Casablanca</td>
+                        <td class="p-4 text-gray-500">Buket Bunga</td>
+                        <td class="p-4 text-gray-500">09 Nov 2026</td>
+                        <td class="p-4 font-bold text-gray-900">8 tangkai</td>
+                        <td class="p-4 text-gray-500">2 hari lagi</td>
+                        <td class="p-4"><span class="bg-red-100 text-red-700 px-3 py-1 rounded-full font-medium text-[11px]">Kritis</span></td>
+                    </tr>
+                    <tr class="hover:bg-gray-50/50 transition">
+                        <td class="p-4 font-medium text-gray-900">🌹 Mawar Merah Holland</td>
+                        <td class="p-4 text-gray-500">Bunga Segar</td>
+                        <td class="p-4 text-gray-500">10 Nov 2026</td>
+                        <td class="p-4 font-bold text-gray-900">140 tangkai</td>
+                        <td class="p-4 text-gray-500">3 hari lagi</td>
+                        <td class="p-4"><span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-medium text-[11px]">Aman</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

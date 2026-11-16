@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keisha Florist - Penjualan & Inventori</title>
+    <!-- Tailwind CSS Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased">
+
+    <!-- ================= 1. HALAMAN LOGIN ================= -->
+    <div id="login-page" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 via-white to-emerald-50 px-4">
+        <div class="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+                    <span class="text-3xl">🌸</span>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-900">Keisha Florist</h2>
+                <p class="text-sm text-gray-500 mt-1">Silakan masuk ke sistem POS & Inventori</p>
+            </div>
+
+            <form id="login-form" onsubmit="handleLogin(event)" class="space-y-5">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">ID Karyawan / Owner</label>
+                    <input type="text" id="login-user" required 
+                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition text-sm"
+                        placeholder="Ketik: indah atau owner">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Kata Sandi</label>
+                    <input type="password" id="login-pass" required 
+                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition text-sm"
+                        placeholder="Ketik: karyawan123 / pemilik123">
+                </div>
+
+                <div class="bg-gray-50 p-3 rounded-xl text-xs text-gray-500 space-y-1">
+                    <p class="font-semibold text-gray-700">💡 Info Akun Demo:</p>
+                    <p>• Karyawan: <b>indah</b> / sandi: <b>karyawan123</b></p>
+                    <p>• Owner: <b>owner</b> / sandi: <b>pemilik123</b></p>
+                </div>
+
+                <button type="submit" 
+                    class="w-full py-3 px-4 bg-emerald-700 hover:bg-emerald-800 text-white font-semibold rounded-xl shadow-lg shadow-emerald-600/20 transition duration-200">
+                    Masuk ke Sistem
+                </button>
+            </form>
+
+            <div class="mt-6 text-center text-xs text-gray-400">
+                &copy; 2026 Keisha Florist Management System
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= 2. APLIKASI UTAMA (Setelah Login) ================= -->
+    <div id="main-app-content" class="hidden flex h-screen overflow-hidden">
+        
+        <!-- Sidebar dan Navigasi Utama -->
+        <aside id="sidebar-container" class="flex flex-col w-64 bg-white border-r border-gray-200 h-full flex-shrink-0">
+            <div class="p-6 border-b border-gray-100 flex items-center space-x-3">
+                <div class="w-10 h-10 bg-pink-100 rounded-xl flex items-center justify-center">
+                    <span class="text-xl">🌸</span>
+                </div>
+                <div>
+                    <h1 class="font-bold text-gray-900 leading-tight">Keisha Florist</h1>
+                    <p class="text-xs text-gray-400">Penjualan & Inventori</p>
+                </div>
+            </div>
+
+            <nav class="flex-1 px-4 py-6 space-y-1.5 overflow-y-auto">
+                <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition bg-emerald-50 text-emerald-800">
+                    <span class="text-lg">📊</span>
+                    <span>Dashboard</span>
+                </button>
+
+                <button onclick="switchTab('kasir')" id="nav-kasir" class="w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition text-gray-600 hover:bg-gray-50">
+                    <div class="flex items-center space-x-3">
+                        <span class="text-lg">🛒</span>
+                        <span>Kasir (POS)</span>
+                    </div>
+                    <span class="bg-emerald-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">Live</span>
+                </button>
+
+                <button onclick="switchTab('inventori')" id="nav-inventori" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition text-gray-600 hover:bg-gray-50">
+                    <span class="text-lg">🌿</span>
+                    <span>Stok Bunga Segar</span>
+                </button>
+
+                <button onclick="switchTab('rusak')" id="nav-rusak" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition text-gray-600 hover:bg-gray-50">
+                    <span class="text-lg">🥀</span>
+                    <span>Log Bunga Rusak</span>
+                </button>
+
+                <button onclick="switchTab('pelanggan')" id="nav-pelanggan" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition text-gray-600 hover:bg-gray-50">
+                    <span class="text-lg">👥</span>
+                    <span>Kelola Pelanggan</span>
+                </button>
+
+                <button onclick="switchTab('laporan')" id="nav-laporan" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition text-gray-600 hover:bg-gray-50">
+                    <span class="text-lg">📈</span>
+                    <span>Laporan Penjualan</span>
+                </button>
+            </nav>
+
+            <div class="p-4 border-t border-gray-100">
+                <div class="flex items-center justify-between bg-gray-50 p-3 rounded-xl border border-gray-100">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-9 h-9 bg-emerald-700 text-white rounded-lg flex items-center justify-center font-bold text-sm" id="user-initials">
+                            IN
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold text-gray-800" id="current-user-name">Indah Permata</p>
+                            <p class="text-[10px] text-emerald-600 flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full inline-block"></span> <span id="current-role-label">Kasir 1</span>
+                            </p>
+                        </div>
+                    </div>
+                    <button onclick="handleLogout()" title="Keluar" class="text-gray-400 hover:text-red-500 text-sm p-1">
+                        🚪
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Area Konten Utama -->
+        <main class="flex-1 overflow-y-auto p-6 lg:p-8">
+            
+            <!-- 1. TAB DASHBOARD UTAMA -->
+            <div id="tab-content-dashboard" class="space-y-6">
+                <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-6 rounded-2xl shadow-sm border border-gray-100 gap-4">
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-900">Dashboard Utama</h2>
+                        <p class="text-xs text-gray-400 mt-0.5">Ringkasan aktivitas toko dan kontrol stok harian</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="bg-gray-100 text-gray-600 px-4 py-2 rounded-xl text-xs font-semibold" id="live-clock">
+                            10.46.03 WIB
+                        </div>
+                        <div onclick="openNotificationModal()" class="relative bg-amber-50 border border-amber-200 p-2.5 rounded-xl text-amber-600 cursor-pointer hover:bg-amber-100 transition" title="Lihat Peringatan">
+                            🔔
+                            <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full border-2 border-white animate-pulse"></span>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <p class="text-xs font-medium text-gray-400">Omzet Hari Ini</p>
+                        <h3 id="dash-omzet" class="text-2xl font-bold text-gray-900 mt-2">Rp 2.450.000</h3>
+                        <p class="text-xs text-emerald-600 font-medium mt-2">↑ Otomatis update dari POS</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <p class="text-xs font-medium text-gray-400">Total Transaksi</p>
+                        <h3 id="dash-transaksi" class="text-2xl font-bold text-gray-900 mt-2">18 Pesanan</h3>
+                        <p id="dash-detail-transaksi" class="text-xs text-gray-500 mt-2">15 Lunas • 3 Diproses</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <p class="text-xs font-medium text-gray-400">Total Stok Bunga</p>
+                        <h3 class="text-2xl font-bold text-gray-900 mt-2">15 Varian</h3>
+                        <p class="text-xs text-gray-500 mt-2">Lengkap di Gudang & Toko</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 bg-gradient-to-br from-red-50/50 to-white">
+                        <p class="text-xs font-medium text-red-600">Peringatan Bunga Kritis</p>
+                        <h3 class="text-2xl font-bold text-red-600 mt-2">2 Item</h3>
+                        <p class="text-xs text-red-500 mt-2 font-medium">⚠️ Lily & Anggrek (<10)</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+                        <h3 class="font-bold text-gray-900">🌿 Ringkasan Stok Bunga Segar (Kontrol FIFO/FEFO)</h3>
+                        <button onclick="switchTab('inventori')" class="bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition">
+                            Lihat Semua Stok
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-gray-50 text-gray-400 uppercase border-b border-gray-100">
+                                    <th class="p-4">Nama Bunga / Produk</th>
+                                    <th class="p-4">Kategori</th>
+                                    <th class="p-4">Tgl Masuk (Batch)</th>
+                                    <th class="p-4">Jumlah Stok</th>
+                                    <th class="p-4">Estimasi Masa Segar</th>
+                                    <th class="p-4">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 text-gray-700">
+                                <tr>
+                                    <td class="p-4 font-medium">🌹 Buket Mawar Holland Merah</td>
+                                    <td class="p-4 text-gray-500">Buket Bunga</td>
+                                    <td class="p-4 text-gray-500">15 Nov 2026</td>
+                                    <td class="p-4 font-bold">15 buket</td>
+                                    <td class="p-4 text-gray-500">3 hari lagi</td>
+                                    <td class="p-4"><span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-medium text-[11px]">Aman</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. TAB KASIR (POS) - 15 VARIAN LENGKAP -->
+            <div id="tab-content-kasir" class="hidden space-y-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-900">Kasir Point of Sales (POS)</h2>
+                        <p class="text-xs text-gray-400 mt-0.5">Pilih dari 15 varian produk bunga & aksesoris beserta jumlahnya</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Katalog 15 Varian Produk dengan Input Qty -->
+                    <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <h3 class="font-bold text-gray-900 mb-4">Pilih Produk Bunga & Aksesoris (15 Varian)</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 max-h-[520px] overflow-y-auto pr-2">
+                            
+                            <!-- 1. Mawar Merah -->
+                            <div class="p-4 rounded-xl border border-gray-200 bg-gray-50/50 flex flex-col justify-between">
+                                <div class="flex items-center space-x-2 mb-2"><span class="text-2xl">🌹</span><div><h4 class="font-semibold text-xs text-gray-800">Mawar Holland Merah</h4><p class="text-xs text-emerald-600 font-bold">Rp 175.000</p></div></div>
+                                <div class="mt-3 pt-3 border-t border-gray-200 flex items-center gap-2">
+                                    <input type="number" id="qty-1" min="1" value="1" class="w-16 px-2 py-1.5 text-xs text-center rounded-lg border border-gray-300 outline-none">
+                                    <button onclick="addToCartWithQty('Buket Mawar Holland Merah', 175000, 'qty-1')" class="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white py-1.5 px-3 rounded-lg text-xs font-semibold transition">+ Keranjang</button>
+                                </div>
+                            </div>
+
+                            <!-- 2. Mawar Pink -->
+                            <div class="p-4 rounded-xl border border-gray-200 bg-gray-50/50 flex flex-col justify-between">
+                                <div class="flex items-center space-x-2 mb-2"><span class="text-2xl">🌸</span><div><h4 class="font-semibold text-xs text-gray-800">Mawar Pink Romantis</h4><p class="text-xs text-emerald-600 font-bold">Rp 160.000</p></div></div>
+                                <div class="mt-3 pt-3 border-t border-gray-200 flex items-center gap-2">
+                                    <input type="number" id="qty-2" min="1" value="1" class="w-16 px-2 py-1.5 text-xs text-center rounded-lg border border-gray-300 outline-none">
+                                    <button onclick="addToCartWithQty('Buket Mawar Pink Romantis', 160000, 'qty-2')" class="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white py-1.5 px-3 rounded-lg text-xs font-semibold transition">+ Keranjang</button>
+                                </div>
+                            </div>
+
+                            <!-- 3. Tulip -->
+                            <div class="p-4 rounded-xl border border-gray-200 bg-gray-50/50 flex flex-col justify-between">
+                                <div class="flex items-center space-x-2 mb-2"><span class="text-2xl">🌷</span><div><h4 class="font-semibold text-xs text-gray-800">Tulip Belanda Premium</h4><p class="text-xs text-emerald-600 font-bold">Rp 250.000</p></div></div>
+                                <div class="mt-3 pt-3 border-t border-gray-200 flex items-center gap-2">
+                                    <input type="number" id="qty-3" min="1" value="1" class="w-16 px-2 py-1.5 text-xs text-center rounded-lg border border-gray-300 outline-none">
+                                    <button onclick="addToCartWithQty('Buket Tulip Belanda Premium', 250000, 'qty-3')" class="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white py-1.5 px-3 rounded-lg text-xs font-semibold transition">+ Keranjang</button>
+                                </div>
+                            </div>
+
+                            <!-- 4. Matahari -->
+                            <div class="p-4 rounded-xl border border-gray-200 bg-gray-50/50 flex flex-col justify-between">
+                                <div class="flex items-center space-x-2 mb-2"><span class="text-2xl">🌻</span><div><h4 class="font-semibold text-xs text-gray-800">Bunga Matahari /Tgt</h4><p class="text-xs text-emerald-600 font-bold">Rp 25.000</p></div></div>
+                                <div class="mt-3 pt-3 border-t border-gray-200 flex items-center gap-2">
+                                    <input type="number" id="qty-4" min="1" value="1" class="w-16 px-2 py-1.5 text-xs text-center rounded-lg border border-gray-300 outline-none">
+                                    <button onclick="addToCartWithQty('Bunga Matahari Segar', 25000, 'qty-4')" class="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white py-1.5 px-3 rounded-lg text-xs font-semibold transition">+ Keranjang</button>
+                                </div>
+                            </div>
+
+                            <!-- 5. Hydrangea -->
+                            <div class="p-4 rounded-xl border border-gray-200 bg-gray-50/50 flex flex-col justify-between">
+                                <div class="flex items-center space-x-2 mb-2"><span class="text-2xl">🔵</span><div><h4 class="font-semibold text-xs text-gray-800">Hydrangea /Tangkai</h4><p class="text-xs text-emerald-600 font-bold">Rp 45.000</p></div></div>
+                                <div class="mt-3 pt-3 border-t border-gray-200 flex items-center gap-2">
+                                    <input type="number" id="qty-5" min="1" value="1" class="w-16 px-2 py-1.5 text-xs text-center rounded-lg border border-gray-300 outline-none">
+                                    <button onclick="addToCartWithQty('Hydrangea Biru / Ungu', 45000, 'qty-5')" class="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white py-1.5 px-3 rounded-lg text-xs font-semibold transition">+ Keranjang</button>
+                                </div>
+                            </div>
+
+                            <!-- 6. Anggrek Pot -->
+                            <div class="p-4 rounded-xl border border-gray-200 bg-gray-50/50 flex flex-col justify-between">
+                                <div class="flex items-center space-x-2 mb-2"><span class="text-2xl">🪴</span><div><h4 class="font-semibold text-xs text-gray-800">Anggrek Bulan Pot</h4><p class="text-xs text-emerald-600 font-bold">Rp 150.000</p></div></div>
+                                <div class="mt-3 pt-3 border-t border-gray-200 flex items-center gap-2">
+                                    <input type="number" id="qty-6" min="1" value="1" class="w-16 px-2 py-1.5 text-xs text-center rounded-lg border border-gray-300 outline-none">
+                                    <button onclick="addToCartWithQty('Anggrek Bulan Putih Pot', 150000, 'qty-6')" class="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white py-1.5 px-3 rounded-lg text-xs font-semibold transition">+ Keranjang</button>
+                                </div>
+                            </div>
+
+                            <!-- 7. Lily -->
+                            <div class="p-4 rounded-xl border border-gray-200 bg-gray-50/50 flex flex-col justify-between">
+                                <div class="flex items-center space-x-2 mb-2"><span class="text-2xl">⚜️</span><div><h4 class="font-semibold text-xs text-gray-800">Lily Casablanca /Tgt</h4><p class="text-xs text-emerald-600 font-bold">Rp 35.000</p></div></div>
+                                <div class="mt-3 pt-3 border-t border-gray-200 flex items-center gap-2">
+                                    <input type="number" id="qty-7" min="1" value="1" class="w-16 px-2 py-1.5 text-xs text-center rounded-lg border border-gray-300 outline-none">
+                                    <button onclick="addToCartWithQty('Lily Casablanca Putih', 35000, 'qty-7')" class="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white py-1.5 px-3 rounded-lg text-xs font-semibold transition">+ Keranjang</button>
+                                </div>
+                            </div>
+
+                            <!-- 8. Anyelir -->
+                            <div class="p-4 rounded-xl border border-gray-200 bg-gray-50/50 flex flex-col justify-between">
+                                <div class="flex items-center space-x-2 mb-2"><span class="text-2xl">🌺</span><div><h4 class="font-semibold text-xs text-gray-800">Anyelir /Tangkai</h4><p class="text-xs text-emerald-600 font-bold">Rp 15.000</p></div></div>
+                                <div class="mt-3 pt-3 border-t border-gray-200 flex items-center gap-2">
+                                    <input type="number" id="qty-8" min="1" value="1" class="w-16 px-2 py-1.5 text-xs text-center rounded-lg border border-gray-300 outline-none">
+                                    <button onclick="addToCartWithQty('Carnation / Anyelir Mixed', 15000, 'qty-8')" class="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white py-1.5 px-3 rounded-lg text-xs font-semibold transition">+ Keranjang</button>
+                                </div>
+                            </div>
+
+                            <!-- 9. Krisan -->
+                            <div class="p-4 rounded-xl border border-gray-200 bg-gray-50/50 flex flex-col justify-between">
+                                <div class="flex items-center space-x-2 mb-2"><span class="text-2xl">🌼</span><div><h4 class="font-semibold text-xs text-gray-800">Krisan Kuning /Tgt</h4><p class="text-xs text-emerald-600 font-bold">Rp 12.000</p></div></div>
+                                <div class="mt-3 pt-3 border-t border-gray-200 flex items-center gap-2">
+                                    <input type="number" id="qty-9" min="1" value="1" class="w-16 px-2 py-1.5 text-xs text-center rounded-lg border border-gray-300 outline-none">
+                                    <button onclick="addToCartWithQty('Krisan Kuning Standar', 12000, 'qty-9')" class="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white py-1.5 px-3 rounded-lg text-xs font-semibold transition">+ Keranjang</button>
+                                </div>
+                            </div>
+
+                            <!-- 10. Melati -->
+                            <div class="p-4 rounded-xl border border-gray-200 bg-gray-50/50 flex flex-col justify-between">
+                                <div class="flex items-center space-x-2 mb-2"><span class="text-2xl">💮</span><div><h4 class="font-semibold text-xs text-gray-800">Melati Putih /Ikat</h4><p class="text-xs text-emerald-600 font-bold">Rp 10.000</p></div></div>
+                                <div class="mt-3 pt-3 border-t border-gray-200 flex items-center gap-2">
+                                    <input type="number" id="qty-10" min="1" value="1" class="w-16 px-2 py-1.5 text-xs text-center rounded-lg border border-gray-300 outline-none">
+                                    <button onclick="addToCartWithQty('Melati Putih Wangi', 10000, 'qty-10')" class="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white py-1.5 px-3 rounded-lg text-xs font-semibold transition">+ Keranjang</button>
+                                </div>
+                            </div>
+
+                            <!-- 11. Baby Breath -->
+                            <div class="p-4 rounded-xl border border-gray-200 bg-gray-50/50 flex flex-col justify-between">
+                                <div class="flex items-center space-x-2 mb-2"><span class="text-2xl">🌿</span><div><h4 class="font-semibold text-xs text-gray-800">Baby Breath /Ikat</h4><p class="text-xs text-emerald-600 font-bold">Rp 30.000</p></div></div>
+                                <div class="mt-3 pt-3 border-t border-gray-200 flex items-center gap-2">
+                                    <input type="number" id="qty-11" min="1" value="1" class="w-16 px-2 py-1.5 text-xs text-center rounded-lg border border-gray-300 outline-none">
+                                    <button onclick="addToCartWithQty('Baby Breath Putih', 30000, 'qty-11')" class="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white py-1.5 px-3 rounded-lg text-xs font-semibold transition">+ Keranjang</button>
+                                </div>
+                            </div>
+
+                            <!-- 12. Daun Monstera -->
+                            <div class="p-4 rounded-xl border border-gray-200 bg-gray-50/50 flex flex-col justify-between">
+                                <div class="flex items-center space-x-2 mb-2"><span class="text-2xl">🍃</span><div><h4 class="font-semibold text-xs text-gray-800">Daun Hias /Pcs</h4><p class="text-xs text-emerald-600 font-bold">Rp 10.000</p></div></div>
+                                <div class="mt-3 pt-3 border-t border-gray-200 flex items-center gap-2">
+                                    <input type="number" id="qty-12" min="1" value="1" class="w-16 px-2 py-1.5 text-xs text-center rounded-lg border border-gray-300 outline-none">
+                                    <button onclick="addToCartWithQty('Daun Monstera / Ruscus', 10000, 'qty-12')" class="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white py-1.5 px-3 rounded-lg text-xs font-semibold transition">+ Keranjang</button>
+                                </div>
+                            </div>
+
+                            <!-- 13. Cellophane -->
+                            <div class="p-4 rounded-xl border border-gray-200 bg-gray-50/50 flex flex-col justify-between">
+                                <div class="flex items-center space-x-2 mb-2"><span class="text-2xl">🎀</span><div><h4 class="font-semibold text-xs text-gray-800">Cellophane /Lembar</h4><p class="text-xs text-emerald-600 font-bold">Rp 5.000</p></div></div>
+                                <div class="mt-3 pt-3 border-t border-gray-200 flex items-center gap-2">
+                                    <input type="number" id="qty-13" min="1" value="1" class="w-16 px-2 py-1.5 text-xs text-center rounded-lg border border-gray-300 outline-none">
+                                    <button onclick="addToCartWithQty('Korean Cellophane Pink/Gold', 5000, 'qty-13')" class="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white py-1.5 px-3 rounded-lg text-xs font-semibold transition">+ Keranjang</button>
+                                </div>
+                            </div>
+
+                            <!-- 14. Pita Satin -->
+                            <div class="p-4 rounded-xl border border-gray-200 bg-gray-50/50 flex flex-col justify-between">
+                                <div class="flex items-center space-x-2 mb-2"><span class="text-2xl">🎗️</span><div><h4 class="font-semibold text-xs text-gray-800">Pita Satin /Meter</h4><p class="text-xs text-emerald-600 font-bold">Rp 8.000</p></div></div>
+                                <div class="mt-3 pt-3 border-t border-gray-200 flex items-center gap-2">
+                                    <input type="number" id="qty-14" min="1" value="1" class="w-16 px-2 py-1.5 text-xs text-center rounded-lg border border-gray-300 outline-none">
+                                    <button onclick="addToCartWithQty('Pita Satin Eksklusif', 8000, 'qty-14')" class="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white py-1.5 px-3 rounded-lg text-xs font-semibold transition">+ Keranjang</button>
+                                </div>
+                            </div>
+
+                            <!-- 15. Kartu Ucapan -->
+                            <div class="p-4 rounded-xl border border-gray-200 bg-gray-50/50 flex flex-col justify-between">
+                                <div class="flex items-center space-x-2 mb-2"><span class="text-2xl">💌</span><div><h4 class="font-semibold text-xs text-gray-800">Kartu Ucapan</h4><p class="text-xs text-emerald-600 font-bold">Rp 3.000</p></div></div>
+                                <div class="mt-3 pt-3 border-t border-gray-200 flex items-center gap-2">
+                                    <input type="number" id="qty-15" min="1" value="1" class="w-16 px-2 py-1.5 text-xs text-center rounded-lg border border-gray-300 outline-none">
+                                    <button onclick="addToCartWithQty('Kartu Ucapan Custom', 3000, 'qty-15')" class="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white py-1.5 px-3 rounded-lg text-xs font-semibold transition">+ Keranjang</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    
+                    <!-- Keranjang Belanja -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-gray-900 mb-4">Keranjang Belanja</h3>
+                            <div id="cart-items" class="space-y-3 text-xs text-gray-500 mb-4">
+                                <p>Belum ada produk dipilih.</p>
+                            </div>
+                        </div>
+                        <div class="border-t border-gray-100 pt-4 space-y-3">
+                            <div>
+                                <label class="block text-[11px] font-medium text-gray-700 mb-1">Metode Pembayaran</label>
+                                <select id="payment-method" class="w-full px-3 py-2 rounded-xl border border-gray-200 text-xs focus:ring-2 focus:ring-emerald-500 outline-none">
+                                    <option value="Tunai (Cash)">Tunai (Cash)</option>
+                                    <option value="QRIS">QRIS</option>
+                                    <option value="Transfer Bank">Transfer Bank</option>
+                                </select>
+                            </div>
+                            <div class="flex justify-between font-bold text-gray-900 text-sm pt-2">
+                                <span>Total:</span>
+                                <span id="cart-total">Rp 0</span>
+                            </div>
+                            <button onclick="checkout()" class="w-full bg-emerald-700 hover:bg-emerald-800 text-white py-3 rounded-xl font-semibold text-xs shadow-md transition">
+                                Bayar Sekarang
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. TAB STOK BUNGA SEGAR -->
+            <div id="tab-content-inventori" class="hidden space-y-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-900">Manajemen Stok & Inventori Bunga</h2>
+                        <p class="text-xs text-gray-400 mt-0.5">Pilih produk yang ada untuk menambah jumlah stok fisik</p>
+                    </div>
+                    <button onclick="openAddStokModal()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition shadow-md">
+                        + Tambah Stok Bunga
+                    </button>
+                </div>
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="p-6 border-b border-gray-100 font-bold text-gray-900">Daftar Inventori Gudang & Toko Lengkap</div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-gray-50 text-gray-400 uppercase border-b border-gray-100">
+                                    <th class="p-4">Nama Produk</th>
+                                    <th class="p-4">Kategori</th>
+                                    <th class="p-4">Tanggal Masuk</th>
+                                    <th class="p-4">Jumlah Stok</th>
+                                    <th class="p-4">Harga Jual / Satuan</th>
+                                    <th class="p-4">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="stok-table-body" class="divide-y divide-gray-100 text-gray-700">
+                                <tr data-name="🌹 Buket Mawar Holland Merah"><td class="p-4 font-medium">🌹 Buket Mawar Holland Merah</td><td class="p-4 text-gray-500">Buket Bunga</td><td class="p-4 text-gray-500">15 Nov 2026</td><td class="p-4 font-bold stok-angka">15 buket</td><td class="p-4">Rp 175.000</td><td class="p-4"><span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-medium text-[11px]">Aman</span></td></tr>
+                                <tr data-name="🌸 Buket Mawar Pink Romantis"><td class="p-4 font-medium">🌸 Buket Mawar Pink Romantis</td><td class="p-4 text-gray-500">Buket Bunga</td><td class="p-4 text-gray-500">15 Nov 2026</td><td class="p-4 font-bold stok-angka">12 buket</td><td class="p-4">Rp 160.000</td><td class="p-4"><span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-medium text-[11px]">Aman</span></td></tr>
+                                <tr data-name="🌷 Buket Tulip Belanda Premium"><td class="p-4 font-medium">🌷 Buket Tulip Belanda Premium</td><td class="p-4 text-gray-500">Buket Bunga</td><td class="p-4 text-gray-500">16 Nov 2026</td><td class="p-4 font-bold stok-angka">10 buket</td><td class="p-4">Rp 250.000</td><td class="p-4"><span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-medium text-[11px]">Aman</span></td></tr>
+                                <tr data-name="🌻 Bunga Matahari Segar"><td class="p-4 font-medium">🌻 Bunga Matahari Segar</td><td class="p-4 text-gray-500">Bunga Segar</td><td class="p-4 text-gray-500">14 Nov 2026</td><td class="p-4 font-bold stok-angka">45 tangkai</td><td class="p-4">Rp 25.000 /tangkai</td><td class="p-4"><span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-medium text-[11px]">Aman</span></td></tr>
+                                <tr data-name="🔵 Hydrangea Biru / Ungu"><td class="p-4 font-medium">🔵 Hydrangea Biru / Ungu</td><td class="p-4 text-gray-500">Bunga Segar</td><td class="p-4 text-gray-500">15 Nov 2026</td><td class="p-4 font-bold stok-angka">20 tangkai</td><td class="p-4">Rp 45.000 /tangkai</td><td class="p-4"><span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-medium text-[11px]">Aman</span></td></tr>
+                                <tr data-name="🪴 Anggrek Bulan Putih Pot"><td class="p-4 font-medium">🪴 Anggrek Bulan Putih Pot</td><td class="p-4 text-gray-500">Tanaman Hias</td><td class="p-4 text-gray-500">08 Nov 2026</td><td class="p-4 font-bold text-red-600 stok-angka">6 pot</td><td class="p-4">Rp 150.000 /pot</td><td class="p-4"><span class="bg-red-100 text-red-700 px-3 py-1 rounded-full font-medium text-[11px]">Kritis</span></td></tr>
+                                <tr data-name="⚜️ Lily Casablanca Putih"><td class="p-4 font-medium">⚜️ Lily Casablanca Putih</td><td class="p-4 text-gray-500">Bunga Segar</td><td class="p-4 text-gray-500">09 Nov 2026</td><td class="p-4 font-bold text-red-600 stok-angka">8 tangkai</td><td class="p-4">Rp 35.000 /tangkai</td><td class="p-4"><span class="bg-red-100 text-red-700 px-3 py-1 rounded-full font-medium text-[11px]">Kritis</span></td></tr>
+                                <tr data-name="🌺 Carnation / Anyelir Mixed"><td class="p-4 font-medium">🌺 Carnation / Anyelir Mixed</td><td class="p-4 text-gray-500">Bunga Segar</td><td class="p-4 text-gray-500">12 Nov 2026</td><td class="p-4 font-bold stok-angka">60 tangkai</td><td class="p-4">Rp 15.000 /tangkai</td><td class="p-4"><span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-medium text-[11px]">Aman</span></td></tr>
+                                <tr data-name="🌼 Krisan Kuning Standar"><td class="p-4 font-medium">🌼 Krisan Kuning Standar</td><td class="p-4 text-gray-500">Bunga Segar</td><td class="p-4 text-gray-500">11 Nov 2026</td><td class="p-4 font-bold stok-angka">85 tangkai</td><td class="p-4">Rp 12.000 /tangkai</td><td class="p-4"><span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-medium text-[11px]">Aman</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. TAB LOG BUNGA RUSAK -->
+            <div id="tab-content-rusak" class="hidden space-y-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-900">Log Bunga Rusak / Layu</h2>
+                        <p class="text-xs text-gray-400 mt-0.5">Pencatatan bunga susut atau afkir untuk audit kerugian</p>
+                    </div>
+                    <button onclick="openAddRusakModal()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition shadow-md">
+                        + Catat Bunga Rusak
+                    </button>
+                </div>
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="p-6 border-b border-gray-100 font-bold text-gray-900">Riwayat Bunga Layu / Dibuang / Afkir</div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-gray-50 text-gray-400 uppercase border-b border-gray-100">
+                                    <th class="p-4">Tanggal Catat</th>
+                                    <th class="p-4">Nama Bunga</th>
+                                    <th class="p-4">Jumlah Rusak</th>
+                                    <th class="p-4">Penyebab Kerusakan</th>
+                                    <th class="p-4">Estimasi Kerugian</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rusak-table-body" class="divide-y divide-gray-100 text-gray-700">
+                                <tr>
+                                    <td class="p-4 text-gray-500">15 Nov 2026</td>
+                                    <td class="p-4 font-medium">🌻 Bunga Matahari Segar</td>
+                                    <td class="p-4 font-bold text-red-600">5 tangkai</td>
+                                    <td class="p-4 text-gray-500">Layu karena melewati batas masa segar</td>
+                                    <td class="p-4 font-semibold">Rp 125.000</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. TAB KELOLA PELANGGAN -->
+            <div id="tab-content-pelanggan" class="hidden space-y-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-900">Kelola Pelanggan (CRM)</h2>
+                        <p class="text-xs text-gray-400 mt-0.5">Daftar pelanggan setia dan riwayat pembelian</p>
+                    </div>
+                    <button onclick="openAddCustomerModal()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition shadow-md">
+                        + Tambah Pelanggan
+                    </button>
+                </div>
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="p-6 border-b border-gray-100 font-bold text-gray-900">Database Member & Pelanggan Setia</div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-gray-50 text-gray-400 uppercase border-b border-gray-100">
+                                    <th class="p-4">Nama Pelanggan</th>
+                                    <th class="p-4">No. WhatsApp</th>
+                                    <th class="p-4">Total Transaksi</th>
+                                    <th class="p-4">Terakhir Belanja</th>
+                                    <th class="p-4">Status Member</th>
+                                </tr>
+                            </thead>
+                            <tbody id="customer-table-body" class="divide-y divide-gray-100 text-gray-700">
+                                <tr>
+                                    <td class="p-4 font-medium">Ibu Rina</td>
+                                    <td class="p-4 text-gray-500">081234567890</td>
+                                    <td class="p-4 font-bold">12 Pesanan</td>
+                                    <td class="p-4 text-gray-500">14 Nov 2026</td>
+                                    <td class="p-4"><span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full font-medium text-[11px]">VIP Member</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. TAB LAPORAN PENJUALAN -->
+            <div id="tab-content-laporan" class="hidden space-y-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex justify-between items-center">
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-900">Laporan Penjualan</h2>
+                        <p class="text-xs text-gray-400 mt-0.5">Analisis omzet harian, mingguan, dan bulanan</p>
+                    </div>
+                    <button onclick="alert('Rekap laporan penjualan berhasil diunduh ke Excel!')" class="bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-semibold px-4 py-2.5 rounded-xl transition">
+                        📥 Download Rekap Excel
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <p class="text-xs font-medium text-gray-400">Total Omzet Minggu Ini</p>
+                        <h3 class="text-2xl font-bold text-gray-900 mt-2">Rp 15.850.000</h3>
+                        <p class="text-xs text-emerald-600 font-medium mt-2">124 Transaksi Berhasil</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <p class="text-xs font-medium text-gray-400">Produk Terlaris</p>
+                        <h3 class="text-xl font-bold text-gray-900 mt-2">Buket Mawar Holland</h3>
+                        <p class="text-xs text-gray-500 mt-2">Terjual 45 buket</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <p class="text-xs font-medium text-gray-400">Total Kerugian Bunga Layu</p>
+                        <h3 class="text-xl font-bold text-red-600 mt-2">Rp 205.000</h3>
+                        <p class="text-xs text-gray-500 mt-2">Efisiensi stok 96.5%</p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- ================= 3. MODAL / POP-UP ================= -->
+    <div id="stok-modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl p-6 border border-gray-100">
+            <h3 class="font-bold text-base text-gray-900 mb-4">Tambah / Restock Jumlah Stok</h3>
+            <form onsubmit="saveStok(event)" class="space-y-4 text-xs">
+                <div>
+                    <label class="block font-medium text-gray-700 mb-1">Pilih Produk</label>
+                    <select id="stok-select-name" required class="w-full px-3 py-2.5 rounded-xl border border-gray-200 outline-none bg-white">
+                        <option value="">-- Pilih Produk --</option>
+                        <option value="🌹 Buket Mawar Holland Merah">🌹 Buket Mawar Holland Merah</option>
+                        <option value="🌸 Buket Mawar Pink Romantis">🌸 Buket Mawar Pink Romantis</option>
+                        <option value="🌷 Buket Tulip Belanda Premium">🌷 Buket Tulip Belanda Premium</option>
+                        <option value="🌻 Bunga Matahari Segar">🌻 Bunga Matahari Segar</option>
+                        <option value="🔵 Hydrangea Biru / Ungu">🔵 Hydrangea Biru / Ungu</option>
+                        <option value="🪴 Anggrek Bulan Putih Pot">🪴 Anggrek Bulan Putih Pot</option>
+                        <option value="⚜️ Lily Casablanca Putih">⚜️ Lily Casablanca Putih</option>
+                        <option value="🌺 Carnation / Anyelir Mixed">🌺 Carnation / Anyelir Mixed</option>
+                        <option value="🌼 Krisan Kuning Standar">🌼 Krisan Kuning Standar</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-medium text-gray-700 mb-1">Jumlah Tambahan</label>
+                    <input type="number" id="stok-tambah-qty" required min="1" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 outline-none" placeholder="Contoh: 10">
+                </div>
+                <div>
+                    <label class="block font-medium text-gray-700 mb-1">Satuan</label>
+                    <input type="text" id="stok-satuan" required class="w-full px-3 py-2.5 rounded-xl border border-gray-200 outline-none" placeholder="tangkai / buket / pot">
+                </div>
+                <div class="flex gap-3 pt-2">
+                    <button type="submit" class="flex-1 bg-emerald-700 text-white font-semibold py-2.5 rounded-xl">Simpan</button>
+                    <button type="button" onclick="closeModal('stok-modal')" class="flex-1 bg-gray-100 text-gray-800 font-semibold py-2.5 rounded-xl">Batal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="rusak-modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl p-6 border border-gray-100">
+            <h3 class="font-bold text-base text-gray-900 mb-4">Catat Bunga Rusak / Layu</h3>
+            <form onsubmit="saveRusak(event)" class="space-y-4 text-xs">
+                <div>
+                    <label class="block font-medium text-gray-700 mb-1">Pilih Produk</label>
+                    <select id="rusak-select-name" required class="w-full px-3 py-2.5 rounded-xl border border-gray-200 outline-none bg-white">
+                        <option value="">-- Pilih Produk --</option>
+                        <option value="🌹 Buket Mawar Holland Merah">🌹 Buket Mawar Holland Merah</option>
+                        <option value="🌸 Buket Mawar Pink Romantis">🌸 Buket Mawar Pink Romantis</option>
+                        <option value="🌷 Buket Tulip Belanda Premium">🌷 Buket Tulip Belanda Premium</option>
+                        <option value="🌻 Bunga Matahari Segar">🌻 Bunga Matahari Segar</option>
+                        <option value="🔵 Hydrangea Biru / Ungu">🔵 Hydrangea Biru / Ungu</option>
+                        <option value="🪴 Anggrek Bulan Putih Pot">🪴 Anggrek Bulan Putih Pot</option>
+                        <option value="⚜️ Lily Casablanca Putih">⚜️ Lily Casablanca Putih</option>
+                        <option value="🌺 Carnation / Anyelir Mixed">🌺 Carnation / Anyelir Mixed</option>
+                        <option value="🌼 Krisan Kuning Standar">🌼 Krisan Kuning Standar</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-medium text-gray-700 mb-1">Jumlah Rusak</label>
+                    <input type="text" id="rusak-qty" required class="w-full px-3 py-2.5 rounded-xl border border-gray-200 outline-none" placeholder="Contoh: 5 tangkai">
+                </div>
+                <div>
+                    <label class="block font-medium text-gray-700 mb-1">Penyebab</label>
+                    <select id="rusak-penyebab" required class="w-full px-3 py-2.5 rounded-xl border border-gray-200 outline-none bg-white">
+                        <option value="">-- Pilih Penyebab --</option>
+                        <option value="Layu karena melewati batas masa segar">Layu karena melewati batas masa segar</option>
+                        <option value="Kelopak bunga rontok / patah di perjalanan">Kelopak bunga rontok / patah di perjalanan</option>
+                        <option value="Batang membusuk / terkena jamur">Batang membusuk / terkena jamur</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-medium text-gray-700 mb-1">Estimasi Kerugian (Rp)</label>
+                    <input type="number" id="rusak-cost" required min="0" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 outline-none" placeholder="75000">
+                </div>
+                <div class="flex gap-3 pt-2">
+                    <button type="submit" class="flex-1 bg-red-600 text-white font-semibold py-2.5 rounded-xl">Simpan</button>
+                    <button type="button" onclick="closeModal('rusak-modal')" class="flex-1 bg-gray-100 text-gray-800 font-semibold py-2.5 rounded-xl">Batal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="customer-modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl p-6 border border-gray-100">
+            <h3 class="font-bold text-base text-gray-900 mb-4">Tambah Pelanggan Baru</h3>
+            <form onsubmit="saveCustomer(event)" class="space-y-4 text-xs">
+                <div><label class="block font-medium text-gray-700 mb-1">Nama Lengkap</label><input type="text" id="cust-name" required class="w-full px-3 py-2.5 rounded-xl border border-gray-200 outline-none"></div>
+                <div><label class="block font-medium text-gray-700 mb-1">No. WhatsApp</label><input type="text" id="cust-phone" required class="w-full px-3 py-2.5 rounded-xl border border-gray-200 outline-none"></div>
+                <div><label class="block font-medium text-gray-700 mb-1">Status</label><select id="cust-status" class="w-full px-3 py-2.5 rounded-xl border border-gray-200 outline-none"><option value="Regular">Regular</option><option value="VIP Member">VIP Member</option></select></div>
+                <div class="flex gap-3 pt-2">
+                    <button type="submit" class="flex-1 bg-emerald-700 text-white font-semibold py-2.5 rounded-xl">Simpan</button>
+                    <button type="button" onclick="closeModal('customer-modal')" class="flex-1 bg-gray-100 text-gray-800 font-semibold py-2.5 rounded-xl">Batal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="receipt-modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-2xl max-w-sm w-full shadow-2xl p-6 border border-gray-100 text-center">
+            <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl font-bold">✓</div>
+            <h3 class="font-bold text-base text-gray-900">Keisha Florist</h3>
+            <p class="text-[11px] text-gray-400 mb-3">Jl. Kenanga No. 12, Kudus</p>
+            <div id="receipt-details" class="text-xs text-left border-y border-dashed border-gray-200 py-3 mb-4 space-y-1 text-gray-600 max-h-48 overflow-y-auto"></div>
+            <div class="flex gap-3">
+                <button onclick="printReceipt()" class="flex-1 bg-emerald-700 text-white font-semibold py-2.5 rounded-xl text-xs">Cetak Struk</button>
+                <button onclick="closeReceipt()" class="flex-1 bg-gray-100 text-gray-800 font-semibold py-2.5 rounded-xl text-xs">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ================= 4. SCRIPT JAVASCRIPT ================= -->
+    <script>
+        let totalOmzetHariIni = 2450000;
+        let totalPesananSelesai = 18;
+        let pesananLunas = 15;
+        let pesananDiproses = 3;
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const user = document.getElementById('login-user').value.trim().toLowerCase();
+            const pass = document.getElementById('login-pass').value.trim();
+
+            if (user === 'indah' && pass === 'karyawan123') {
+                document.getElementById('current-user-name').innerText = 'Indah Permata';
+                document.getElementById('current-role-label').innerText = 'Kasir 1';
+                document.getElementById('user-initials').innerText = 'IN';
+            } else if (user === 'owner' && pass === 'pemilik123') {
+                document.getElementById('current-user-name').innerText = 'Pemilik Toko';
+                document.getElementById('current-role-label').innerText = 'Owner / Administrator';
+                document.getElementById('user-initials').innerText = 'OW';
+            } else {
+                alert('ID atau Kata Sandi salah!\nGunakan akun:\n- Karyawan: indah / karyawan123\n- Owner: owner / pemilik123');
+                return;
+            }
+
+            document.getElementById('login-page').classList.add('hidden');
+            document.getElementById('main-app-content').classList.remove('hidden');
+        }
+
+        function handleLogout() {
+            document.getElementById('login-page').classList.remove('hidden');
+            document.getElementById('main-app-content').classList.add('hidden');
+        }
+
+        function switchTab(tabName) {
+            const tabs = ['dashboard', 'kasir', 'inventori', 'rusak', 'pelanggan', 'laporan'];
+            tabs.forEach(t => {
+                const el = document.getElementById(`tab-content-${t}`);
+                if(el) el.classList.add('hidden');
+                const nav = document.getElementById(`nav-${t}`);
+                if(nav) {
+                    nav.classList.remove('bg-emerald-50', 'text-emerald-800');
+                    nav.classList.add('text-gray-600', 'hover:bg-gray-50');
+                }
+            });
+
+            const activeEl = document.getElementById(`tab-content-${tabName}`);
+            if(activeEl) activeEl.classList.remove('hidden');
+            const activeNav = document.getElementById(`nav-${tabName}`);
+            if(activeNav) {
+                activeNav.classList.remove('text-gray-600', 'hover:bg-gray-50');
+                activeNav.classList.add('bg-emerald-50', 'text-emerald-800');
+            }
+        }
+
+        setInterval(() => {
+            const d = new Date();
+            const timeStr = d.toTimeString().split(' ')[0] + ' WIB';
+            const clockEl = document.getElementById('live-clock');
+            if(clockEl) clockEl.innerText = timeStr;
+        }, 1000);
+
+        function openNotificationModal() { document.getElementById('notification-modal').classList.remove('hidden'); }
+        function openAddStokModal() { document.getElementById('stok-modal').classList.remove('hidden'); }
+        function openAddCustomerModal() { document.getElementById('customer-modal').classList.remove('hidden'); }
+        function openAddRusakModal() { document.getElementById('rusak-modal').classList.remove('hidden'); }
+        function closeModal(modalId) { document.getElementById(modalId).classList.add('hidden'); }
+
+        function saveStok(event) {
+            event.preventDefault();
+            const selectedName = document.getElementById('stok-select-name').value;
+            const addQty = parseInt(document.getElementById('stok-tambah-qty').value);
+            const satuan = document.getElementById('stok-satuan').value.trim();
+
+            const rows = document.querySelectorAll('#stok-table-body tr');
+            rows.forEach(row => {
+                const nameCell = row.getAttribute('data-name');
+                if (nameCell === selectedName) {
+                    const stokCell = row.querySelector('.stok-angka');
+                    const currentNum = parseInt(stokCell.innerText.replace(/[^0-9]/g, '')) || 0;
+                    const newTotal = currentNum + addQty;
+                    stokCell.innerText = `${newTotal} ${satuan}`;
+                    
+                    const statusCell = row.cells[5];
+                    if (newTotal >= 10) {
+                        statusCell.innerHTML = '<span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-medium text-[11px]">Aman</span>';
+                        stokCell.classList.remove('text-red-600');
+                    }
+                }
+            });
+
+            closeModal('stok-modal');
+            alert(`Berhasil menambahkan ${addQty} ${satuan} ke stok ${selectedName}!`);
+            document.getElementById('stok-tambah-qty').value = '';
+            document.getElementById('stok-satuan').value = '';
+            document.getElementById('stok-select-name').selectedIndex = 0;
+        }
+
+        function saveRusak(event) {
+            event.preventDefault();
+            const name = document.getElementById('rusak-select-name').value;
+            const qty = document.getElementById('rusak-qty').value;
+            const penyebab = document.getElementById('rusak-penyebab').value;
+            const cost = parseInt(document.getElementById('rusak-cost').value).toLocaleString();
+            
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+
+            const tbody = document.getElementById('rusak-table-body');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td class="p-4 text-gray-500">${dateStr}</td>
+                <td class="p-4 font-medium">${name}</td>
+                <td class="p-4 font-bold text-red-600">${qty}</td>
+                <td class="p-4 text-gray-500">${penyebab}</td>
+                <td class="p-4 font-semibold">Rp ${cost}</td>
+            `;
+            tbody.prepend(newRow);
+            closeModal('rusak-modal');
+            alert('Log bunga rusak / layu berhasil dicatat!');
+            
+            document.getElementById('rusak-select-name').selectedIndex = 0;
+            document.getElementById('rusak-qty').value = '';
+            document.getElementById('rusak-penyebab').selectedIndex = 0;
+            document.getElementById('rusak-cost').value = '';
+        }
+
+        function saveCustomer(event) {
+            event.preventDefault();
+            const name = document.getElementById('cust-name').value;
+            const phone = document.getElementById('cust-phone').value;
+            const status = document.getElementById('cust-status').value;
+            const badgeClass = status === 'VIP Member' ? 'bg-purple-100 text-purple-700' : 'bg-emerald-100 text-emerald-700';
+
+            const tbody = document.getElementById('customer-table-body');
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td class="p-4 font-medium">${name}</td>
+                <td class="p-4 text-gray-500">${phone}</td>
+                <td class="p-4 font-bold">1 Pesanan</td>
+                <td class="p-4 text-gray-500">Baru saja</td>
+                <td class="p-4"><span class="${badgeClass} px-3 py-1 rounded-full font-medium text-[11px]">${status}</span></td>
+            `;
+            tbody.prepend(newRow);
+            closeModal('customer-modal');
+            alert('Pelanggan baru berhasil ditambahkan!');
+        }
+
+        let cart = [];
+        
+        function addToCartWithQty(name, price, qtyInputId) {
+            const qtyInput = document.getElementById(qtyInputId);
+            const addQty = parseInt(qtyInput.value) || 1;
+
+            if (addQty <= 0) {
+                alert('Jumlah minimal adalah 1!');
+                return;
+            }
+
+            const existing = cart.find(item => item.name === name);
+            if(existing) {
+                existing.qty += addQty;
+            } else {
+                cart.push({ name, price, qty: addQty });
+            }
+            
+            updateCartUI();
+            qtyInput.value = 1;
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById('cart-items');
+            const totalEl = document.getElementById('cart-total');
+            if(cart.length === 0) {
+                container.innerHTML = '<p>Belum ada produk dipilih.</p>';
+                totalEl.innerText = 'Rp 0';
+                return;
+            }
+            let html = '';
+            let total = 0;
+            cart.forEach((item) => {
+                const subtotal = item.price * item.qty;
+                total += subtotal;
+                html += `<div class="flex justify-between items-center text-xs border-b border-gray-100 pb-1.5"><span>${item.name} (x${item.qty})</span><span class="font-bold">Rp ${subtotal.toLocaleString()}</span></div>`;
+            });
+            container.innerHTML = html;
+            totalEl.innerText = `Rp ${total.toLocaleString()}`;
+        }
+
+        let currentCartTotal = 0;
+
+        function checkout() {
+            if(cart.length === 0) {
+                alert('Keranjang masih kosong!');
+                return;
+            }
+            
+            currentCartTotal = 0;
+            cart.forEach(item => {
+                currentCartTotal += (item.price * item.qty);
+            });
+
+            const now = new Date();
+            const notaNo = 'KF-' + now.getFullYear() + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0') + '-' + Math.floor(100 + Math.random() * 900);
+            const dateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+            const timeStr = now.toTimeString().split(' ')[0] + ' WIB';
+            const cashierName = document.getElementById('current-user-name').innerText;
+            const paymentMethod = document.getElementById('payment-method').value;
+
+            let receiptHTML = `<div class="space-y-0.5 mb-2 text-[11px] text-gray-600">`;
+            receiptHTML += `<p><b>No. Nota:</b> ${notaNo}</p>`;
+            receiptHTML += `<p><b>Tanggal:</b> ${dateStr} - ${timeStr}</p>`;
+            receiptHTML += `<p><b>Kasir / Pegawai:</b> ${cashierName}</p>`;
+            receiptHTML += `<p><b>Pembayaran:</b> ${paymentMethod}</p>`;
+            receiptHTML += `</div>`;
+            receiptHTML += `<div class="border-t border-dashed border-gray-200 pt-2 space-y-1">`;
+            
+            cart.forEach(item => {
+                const sub = item.price * item.qty;
+                receiptHTML += `<div class="flex justify-between"><span>${item.name} x${item.qty}</span><span>Rp ${sub.toLocaleString()}</span></div>`;
+            });
+            receiptHTML += `</div>`;
+            receiptHTML += `<div class="border-t border-gray-200 mt-2 pt-2 flex justify-between font-bold text-gray-900 text-xs"><span>TOTAL:</span><span>Rp ${currentCartTotal.toLocaleString()}</span></div>`;
+            
+            document.getElementById('receipt-details').innerHTML = receiptHTML;
+            document.getElementById('receipt-modal').classList.remove('hidden');
+        }
+
+        function closeReceipt() {
+            totalOmzetHariIni += currentCartTotal;
+            totalPesananSelesai += 1;
+            pesananLunas += 1;
+
+            document.getElementById('dash-omzet').innerText = `Rp ${totalOmzetHariIni.toLocaleString()}`;
+            document.getElementById('dash-transaksi').innerText = `${totalPesananSelesai} Pesanan`;
+            document.getElementById('dash-detail-transaksi').innerText = `${pesananLunas} Lunas • ${pesananDiproses} Diproses`;
+
+            document.getElementById('receipt-modal').classList.add('hidden');
+            cart = [];
+            currentCartTotal = 0;
+            updateCartUI();
+            switchTab('dashboard');
+        }
+
+        function printReceipt() {
+            window.print();
+        }
+    </script>
+</body>
+</html>
